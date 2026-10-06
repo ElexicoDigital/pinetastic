@@ -40,7 +40,7 @@ export const Route = createFileRoute('/')({
 })
 
 const EMAILS = ['kritika@ecothriveinnovations.com', 'kritika@pinetastic.in']
-const COMPANY = 'Eco Thrive Innovation PVT. LTD.'
+const COMPANY = 'BY ECO THRIVE INNOVATIONS PRIVATE LIMITED'
 const PHONES = [['+917876522560', '+91 78765 22560'], ['+918580786086', '+91 85807 86086']] as const
 const left = [['About', 'about'], ['Process', 'process'], ['Collections', 'collections']] as const
 const right = [['Founders', 'founders'], ['Journal', 'journal'], ['Contact', 'contact']] as const
