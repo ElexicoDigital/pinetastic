@@ -40,7 +40,7 @@ export const Route = createFileRoute('/')({
 })
 
 const EMAILS = ['kritika@ecothriveinnovations.com', 'kritika@pinetastic.in']
-const COMPANY = 'Eco Thrive Innovation Private Limited'
+const COMPANY = 'Eco Thrive Innovation PVT. LTD.'
 const PHONES = [['+917876522560', '+91 78765 22560'], ['+918580786086', '+91 85807 86086']] as const
 const left = [['About', 'about'], ['Process', 'process'], ['Collections', 'collections']] as const
 const right = [['Founders', 'founders'], ['Journal', 'journal'], ['Contact', 'contact']] as const
@@ -87,16 +87,16 @@ const stories = [
 ]
 
 function TrustedCarousel() {
-  const { ref, index, animate, onEnd, next, prev, setPaused } = useForwardSlider(clients.length)
+  const { ref, index, animate, onEnd, next, prev } = useForwardSlider(clients.length, { firstDelay: 1000, interval: 2500, direction: 'rtl' })
   return (
-    <div ref={ref} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <div ref={ref}>
       <div className="client-window">
        <div className={`client-track ${animate ? '' : 'instant'}`} style={{ '--i': index + 2 } as CSSProperties} onTransitionEnd={e => { if (e.target === e.currentTarget) onEnd() }}>
         {[...clients.slice(-2), ...clients, ...clients.slice(0, 3)].map((c, i) => (
           <div key={i} className={`client-slide ${i === index + 2 ? 'is-main' : Math.abs(i - index - 2) === 1 ? 'is-neighbour' : 'is-distant'}`} aria-hidden={Math.abs(i - index - 2) > 1}><div className="logo-card">
             <strong>{c.name}</strong>
             <div className="seal"><img src={c.image} alt={c.name} width={500} height={500} /></div>
-            <small>Conference kits &amp; bags</small>
+            <small>Conference Kits &amp; Bags</small>
           </div></div>
         ))}
        </div>
@@ -111,7 +111,7 @@ function TrustedCarousel() {
 
 function StorySlider() {
   const n = stories.length
-  const { ref, index, animate, onEnd, next, prev, setPaused } = useForwardSlider(n)
+  const { ref, index, animate, onEnd, next, prev } = useForwardSlider(n, { firstDelay: 2000, interval: 4000, direction: 'rtl' })
   const [visible, setVisible] = useState(3)
   const items = [...stories, ...stories]
 
@@ -124,7 +124,7 @@ function StorySlider() {
   const pos = index % n
 
   return (
-    <div ref={ref} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+    <div ref={ref}>
       <div className="slider-head">
         <h3>More from the field</h3>
         <div className="controls">
@@ -137,7 +137,7 @@ function StorySlider() {
           {items.map((s, i) => (
             <article key={i} className="figure clipping" aria-hidden={i < index || i >= index + visible}>
               <div className="clip-mast"><span>The Field Journal</span><span>{s.tag}</span></div>
-              <div className="frame ratio-32"><img src={s.image} alt={s.title} width={1600} height={1066} loading="lazy" style={{ objectPosition: s.position }} /></div>
+              <div className="frame ratio-32"><img src={s.image} alt={s.title} width={1600} height={1066} loading="eager" decoding="async" style={{ objectPosition: s.position }} /></div>
               <div className="story-meta"><span className="label">{s.tag}</span><span className="num">No. {String((i % n) + 1).padStart(2, '0')}</span></div>
               <h4>{s.title}</h4>
               <p>{s.text}</p>
@@ -164,13 +164,30 @@ function Index() {
   }, [])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const bar = document.querySelector<HTMLElement>('.scroll-progress')
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40)
+      if (bar) {
+        const max = document.documentElement.scrollHeight - window.innerHeight
+        bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`
+      }
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     const reveal = new IntersectionObserver(entries => entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); reveal.unobserve(e.target) }
     }), { threshold: 0, rootMargin: '0px 0px -24px 0px' })
-    document.querySelectorAll('.reveal, .wipe').forEach(el => reveal.observe(el))
+    const fx = ['fx-left', 'fx-up', 'fx-right', 'fx-zoom', 'fx-down', 'fx-tilt']
+    // Images in the same group share one effect; each new group gets a different one.
+    const groupFx = new Map<Element, string>()
+    document.querySelectorAll('.reveal, .wipe').forEach(el => {
+      if (el.classList.contains('wipe') || el.querySelector('.frame')) {
+        const group = el.parentElement ?? el
+        if (!groupFx.has(group)) groupFx.set(group, fx[groupFx.size % fx.length] ?? 'fx-up')
+        el.classList.add(groupFx.get(group) ?? 'fx-up')
+      }
+      reveal.observe(el)
+    })
     const spy = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) setCurrent(e.target.id) }), { rootMargin: '-45% 0px -50% 0px' })
     nav.forEach(([, id]) => { const el = document.getElementById(id); if (el) spy.observe(el) })
     return () => { window.removeEventListener('scroll', onScroll); reveal.disconnect(); spy.disconnect() }
@@ -179,6 +196,7 @@ function Index() {
   const links = (items: typeof nav) => items.map(([label, id]) => <a key={id} href={`#${id}`} className={current === id ? 'active' : ''}>{label}</a>)
 
   return <>
+    <div className="scroll-progress" aria-hidden="true" />
     <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="bar"><div className="notch">
         <Brand />
@@ -225,7 +243,7 @@ function Index() {
 
       <section className="section" id="about"><div className="wrap about-grid">
         <figure className="figure wipe">
-          <div className="frame ratio-45"><img src={needles} alt="Fallen pine needles beside spun pine fibre" width={1200} height={1504} loading="lazy" /></div>
+          <div className="frame ratio-45"><img src={needles} alt="Fallen pine needles beside spun pine fibre" width={1200} height={1504} loading="eager" decoding="async" /></div>
           <figcaption className="caption"><b>Fig. 01</b>Fallen chir pine needles and the natural fibre spun from them.</figcaption>
         </figure>
         <div className="about-copy reveal">
@@ -264,7 +282,7 @@ function Index() {
         <div className="process-grid">
           {steps.map((s, i) => (
             <article key={s.title} className="story figure wipe" style={delay(i)}>
-              <div className="frame ratio-45"><img src={s.image} alt={s.alt} width={1200} height={1500} loading="lazy" /></div>
+              <div className="frame ratio-45"><img src={s.image} alt={s.alt} width={1200} height={1500} loading="eager" decoding="async" /></div>
               <div className="story-meta"><span className="label">Step</span><span className="num">{String(i + 1).padStart(2, '0')}</span></div>
               <h3>{s.title}</h3>
               <p>{s.text}</p>
@@ -281,7 +299,7 @@ function Index() {
         <div className="products">
           {products.map((p, i) => (
             <Link key={p.name} to="/catalog" className="story product figure wipe" style={delay(i)}>
-              <div className="frame ratio-45"><img src={p.image} alt={p.name} width={1200} height={1504} loading="lazy" /></div>
+              <div className="frame ratio-45"><img src={p.image} alt={p.name} width={1200} height={1504} loading="eager" decoding="async" /></div>
               <div className="story-meta"><span className="label">Collection</span><span className="num">No. {String(i + 1).padStart(2, '0')}</span></div>
               <h3>{p.name}</h3>
               <p>{p.text}</p>
@@ -293,7 +311,7 @@ function Index() {
         <div className="more-grid">
           {more.map((p, i) => (
             <Link key={p.name} to="/catalog" className="mini figure wipe" style={delay(i)}>
-              <div className="frame ratio-11"><img src={p.image} alt={p.name} width={1200} height={1200} loading="lazy" /></div>
+              <div className="frame ratio-11"><img src={p.image} alt={p.name} width={1200} height={1200} loading="eager" decoding="async" /></div>
               <h4>{p.name}</h4>
               <p>{p.text}</p>
             </Link>
@@ -322,8 +340,8 @@ function Index() {
           <p className="lead" style={{ marginTop: 22 }}>Building a circular future for Himalayan forests and the communities around them.</p>
         </div>
         <div className="founders">
-          <figure className="founder figure wipe"><div className="frame ratio-11"><img src={kritikaAsset} alt="Kritika Sharma" width={500} height={500} loading="lazy" /></div><h3>Kritika Sharma</h3><p>Founder</p></figure>
-          <figure className="founder figure wipe" style={delay(1)}><div className="frame ratio-11"><img src={krishnaAsset} alt="Krishna Sharma" width={500} height={500} loading="lazy" /></div><h3>Krishna Sharma</h3><p>Co-founder</p></figure>
+          <figure className="founder figure wipe"><div className="frame ratio-11"><img src={kritikaAsset} alt="Kritika Sharma" width={500} height={500} loading="eager" decoding="async" /></div><h3>Kritika Sharma</h3><p>Founder</p></figure>
+          <figure className="founder figure wipe" style={delay(1)}><div className="frame ratio-11"><img src={krishnaAsset} alt="Krishna Sharma" width={500} height={500} loading="eager" decoding="async" /></div><h3>Krishna Sharma</h3><p>Co-founder</p></figure>
         </div>
       </div></section>
 
@@ -338,7 +356,7 @@ function Index() {
       <section className="section contact" id="contact"><div className="wrap">
         <div className="contact-card">
           <figure className="contact-still">
-            <img src={bag} alt="Pine-fibre conference bag with Himachali Patti detailing" width={1200} height={1500} loading="lazy" />
+            <img src={bag} alt="Pine-fibre conference bag with Himachali Patti detailing" width={1200} height={1500} loading="eager" decoding="async" />
             <figcaption><span>Pinetastic</span>Rooted in nature. Made for your next occasion.</figcaption>
           </figure>
           <div className="contact-body">
@@ -360,7 +378,7 @@ function Index() {
 
     <footer className="site-footer"><div className="wrap">
       <div className="footer-mark">
-        <img src={mark} alt="Pinetastic emblem" width={600} height={452} loading="lazy" />
+        <img src={mark} alt="Pinetastic emblem" width={600} height={452} loading="eager" decoding="async" />
         <strong>PINETASTIC</strong>
         <p className="footer-company">{COMPANY}</p>
         <p>Eco-friendly products · Rooted in nature</p>
