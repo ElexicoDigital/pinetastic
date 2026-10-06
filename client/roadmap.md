@@ -1,0 +1,27 @@
+# PineTastic
+- [x] Correct founder names and roles exactly as supplied.
+- [x] Restore luxury client-card detailing while preserving centre/neighbour movement.
+- [x] Ensure news and contact are visible throughout scrolling.
+- [x] Separate mobile, tablet and desktop navigation/layout treatment.
+- [x] Refine the moving values strip without changing its wording.
+- [x] Earlier build, assets, catalogue, QR, logo and rebuild tasks (done).
+- [x] Light theme everywhere — no dark green sections, header or footer.
+- [x] New fonts: Marcellus headings + Jost body.
+- [x] Rebuilt navbar: centred logo with "PINETASTIC" in capitals, light bar.
+- [x] Rebuilt hero section on light background.
+- [x] Refined gold pine-cone logo and favicon.
+- [x] "Made by local women" wording.
+- [x] Trusted by: faster rotation; new heading.
+- [x] More from the field: auto-slides one card at a time and loops.
+- [x] Subtle, professional image fade-in animation.
+- [x] Contact: enquiry form removed; two emails; two separate phone cards.
+- [x] Collections: catalogue-matched AI images + "More from the catalogue" + impact section.
+- [x] Floating pill nav, image hero, looping slider, rebuilt contact, client labels.
+- [ ] Confirm second email address on the pinetastic.in domain (waiting on user).
+- [x] Simplify slim navigation and keep catalogue accessible on mobile.
+- [x] Start client and news sliders only when visible; hold, advance smoothly, loop forward.
+- [x] Expand HIMCOSTE and show three of six news stories first on desktop.
+- [x] Restore large centred client with smaller neighbours and seamless forward movement.
+- [x] Rebuild contact as an unframed light luxury section.
+- [x] Correct navigation at mobile and intermediate widths; replace black navigation Catalogue button.
+- [x] Add company name below hero and footer wordmarks.

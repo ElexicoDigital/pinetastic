@@ -1,0 +1,48 @@
+CLIENT REPAIR — 6 October 2026
+
+Updated files:
+- src/routes/index.tsx: exact local asset imports; mobile menu only.
+- src/routes/catalog.tsx: Catalogue/Pinetastic.pdf?url import.
+- src/routes/qr.tsx: Generated/pinetastic-mark.png import.
+- src/components/brand.tsx: Generated/pinetastic-mark.png import.
+- src/components/catalogue-viewer.tsx: local PDF URL.
+- src/styles.css: one-row mobile header and accessible premium menu only.
+- vite.config.ts: Nitro Vercel deployment preset.
+- vercel.json: removed index.html rewrite that breaks server routing.
+- AGENTS.md: updated documentation for portable imports and mobile navigation.
+
+Asset mapping:
+- Generated/*.png and Generated/*.jpg: existing generated artwork.
+- Team/Kritika.jpg and Team/Krishna.jpg: founder photos.
+- B2G/12.jpg through 17.jpg: institution images.
+- Events/event-award2.jpg: award.
+- Events/event-award3.jpg: recognition.
+- Events/1.jpeg: exhibition.
+- Events/IMG_20250517_170147253_HDR_AE.jpg: community.
+- Events/event-msme.jpeg: MSME.
+- Events/IMG_20251205_143639502.jpg: product showcase.
+- Catalogue/Pinetastic.pdf: catalogue.
+
+No asset files were renamed or edited. Existing unused JSON pointers are
+preserved, but the website no longer imports them or depends on /__l5e URLs.
+All other page markup, copy, product details and desktop styling are preserved.
+
+Using this replacement:
+Extract client/ and use it as your project folder. Generated build output,
+node_modules and Git metadata are intentionally excluded.
+Install dependencies with npm ci (or bun install), then npm run dev.
+For Vercel select the client folder as Root Directory, Build Command:
+npm run build; leave Output Directory unset (Nitro generates Vercel output).
+Use Framework Preset Other if automatic detection selects the wrong preset.
+Do not configure an index.html catch-all rewrite.
+
+Verified:
+- Exact-case asset imports resolve on Linux.
+- Vercel production build generates .vercel/output with server routing.
+- PDF and PDF worker are included in Vercel static output.
+- Browser: mobile widths 320, 375, 390 and 640; one-row header, menu links,
+  link-close behavior and Escape-close behavior.
+- Desktop navigation remains visible, with mobile toggle hidden.
+- All website/QR images load; catalogue renders 31 pages; page 2 works.
+- Existing test suite passes; no browser runtime errors observed.
+Actual deployment on a live Vercel account was not performed.
