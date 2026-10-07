@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useEffect, useState, type CSSProperties } from 'react'
-import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, Mail, MapPin, Phone, Menu, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, Flame, HeartHandshake, Landmark, Mail, MapPin, Phone, Menu, Recycle, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Brand } from '@/components/brand'
@@ -47,6 +47,8 @@ const right = [['Founders', 'founders'], ['Journal', 'journal'], ['Contact', 'co
 const nav = [...left, ...right]
 const delay = (i: number) => ({ '--d': `${i * 0.14}s` }) as CSSProperties
 
+const impactIcons = [Recycle, HeartHandshake, Flame, Landmark]
+const roman = ['I', 'II', 'III', 'IV']
 const impact = [
   { title: 'Circular economy', text: 'Pine-needle biomass becomes useful products, closing the waste loop.' },
   { title: 'Rural livelihoods', text: 'Fair, steady income for village artisans and women entrepreneurs.' },
@@ -201,16 +203,19 @@ function Index() {
       <div className="topbar">
         <Brand tagline />
         <nav className="nav-notch" aria-label="Main navigation">{links(nav)}</nav>
-        <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
-          <Dialog.Trigger asChild><button type="button" className="nav-toggle" aria-label="Open navigation" aria-expanded={menuOpen}><Menu /></button></Dialog.Trigger>
-          <Dialog.Portal>
-            <Dialog.Overlay className="mobile-nav-overlay" />
-            <Dialog.Content className="mobile-nav-panel" aria-describedby={undefined}>
-              <div className="mobile-nav-heading"><Dialog.Title>PINETASTIC</Dialog.Title><Dialog.Close asChild><button type="button" className="mobile-nav-close" aria-label="Close navigation"><X /></button></Dialog.Close></div>
-              <nav className="mobile-nav-links" aria-label="Mobile navigation">{nav.map(([label, id], i) => <Dialog.Close asChild key={id}><a href={`#${id}`} className={current === id ? 'active' : ''}><span className="mobile-nav-number">{String(i + 1).padStart(2, '0')}</span><span>{label}</span><ArrowUpRight /></a></Dialog.Close>)}</nav>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+        <div className="nav-end">
+          <div className="nav-meta" aria-hidden="true"><span>Himalayan Pine Needles</span><small>Eco-Friendly · Sustainable</small></div>
+          <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
+            <Dialog.Trigger asChild><button type="button" className="nav-toggle" aria-label="Open navigation" aria-expanded={menuOpen}><Menu /></button></Dialog.Trigger>
+            <Dialog.Portal>
+              <Dialog.Overlay className="mobile-nav-overlay" />
+              <Dialog.Content className="mobile-nav-panel" aria-describedby={undefined}>
+                <div className="mobile-nav-heading"><Dialog.Title>PINETASTIC</Dialog.Title><Dialog.Close asChild><button type="button" className="mobile-nav-close" aria-label="Close navigation"><X /></button></Dialog.Close></div>
+                <nav className="mobile-nav-links" aria-label="Mobile navigation">{nav.map(([label, id], i) => <Dialog.Close asChild key={id}><a href={`#${id}`} className={current === id ? 'active' : ''}><span className="mobile-nav-number">{String(i + 1).padStart(2, '0')}</span><span>{label}</span><ArrowUpRight /></a></Dialog.Close>)}</nav>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
+        </div>
       </div>
     </header>
 
@@ -261,14 +266,18 @@ function Index() {
           <p className="kicker center">Our impact</p>
           <h2 className="h2">Good for forests. Good for people.</h2>
         </div>
-        <div className="impact-grid">
-          {impact.map((p, i) => (
-            <article key={p.title} className="reveal" style={delay(i)}>
-              <span className="num">{String(i + 1).padStart(2, '0')}</span>
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
-            </article>
-          ))}
+        <div className="impact-panel">
+          {impact.map((p, i) => {
+            const Icon = impactIcons[i] ?? Recycle
+            return (
+              <article key={p.title} className="impact-item reveal" style={delay(i)}>
+                <span className="impact-roman" aria-hidden="true">{roman[i]}</span>
+                <span className="impact-medal"><Icon strokeWidth={1.25} /></span>
+                <h3>{p.title}</h3>
+                <p>{p.text}</p>
+              </article>
+            )
+          })}
         </div>
       </div></section>
 
