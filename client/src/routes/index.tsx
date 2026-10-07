@@ -40,7 +40,7 @@ export const Route = createFileRoute('/')({
 })
 
 const EMAILS = ['kritika@ecothriveinnovations.com', 'kritika@pinetastic.in']
-const COMPANY = 'BY ECO THRIVE INNOVATIONS PRIVATE LIMITED'
+const COMPANY = 'Eco Thrive Innovation Private Limited'
 const PHONES = [['+917876522560', '+91 78765 22560'], ['+918580786086', '+91 85807 86086']] as const
 const left = [['About', 'about'], ['Process', 'process'], ['Collections', 'collections']] as const
 const right = [['Founders', 'founders'], ['Journal', 'journal'], ['Contact', 'contact']] as const
@@ -197,23 +197,21 @@ function Index() {
 
   return <>
     <div className="scroll-progress" aria-hidden="true" />
-    <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
-      <div className="bar"><div className="notch">
-        <Brand />
-        <nav className="nav-links" aria-label="Main navigation">{links(nav)}</nav>
-        <Button variant="editorial" size="sm" className="nav-catalogue" asChild><Link to="/catalog">Catalogue <ArrowUpRight /></Link></Button>
+    <header className={`site-header site-nav ${scrolled ? 'scrolled' : ''}`}>
+      <div className="topbar">
+        <Brand tagline />
+        <nav className="nav-notch" aria-label="Main navigation">{links(nav)}</nav>
         <Dialog.Root open={menuOpen} onOpenChange={setMenuOpen}>
-          <Dialog.Trigger asChild><Button variant="ghost" size="icon" className="menu-toggle" aria-label="Open navigation" aria-expanded={menuOpen}><Menu /></Button></Dialog.Trigger>
+          <Dialog.Trigger asChild><button type="button" className="nav-toggle" aria-label="Open navigation" aria-expanded={menuOpen}><Menu /></button></Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay className="mobile-nav-overlay" />
             <Dialog.Content className="mobile-nav-panel" aria-describedby={undefined}>
-              <div className="mobile-nav-heading"><Dialog.Title>PINETASTIC</Dialog.Title><Dialog.Close asChild><Button variant="ghost" size="icon" className="mobile-nav-close" aria-label="Close navigation"><X /></Button></Dialog.Close></div>
+              <div className="mobile-nav-heading"><Dialog.Title>PINETASTIC</Dialog.Title><Dialog.Close asChild><button type="button" className="mobile-nav-close" aria-label="Close navigation"><X /></button></Dialog.Close></div>
               <nav className="mobile-nav-links" aria-label="Mobile navigation">{nav.map(([label, id], i) => <Dialog.Close asChild key={id}><a href={`#${id}`} className={current === id ? 'active' : ''}><span className="mobile-nav-number">{String(i + 1).padStart(2, '0')}</span><span>{label}</span><ArrowUpRight /></a></Dialog.Close>)}</nav>
-              <Dialog.Close asChild><Button variant="editorial" className="mobile-nav-catalogue" asChild><Link to="/catalog">Catalogue <ArrowUpRight /></Link></Button></Dialog.Close>
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>
-      </div></div>
+      </div>
     </header>
 
     <main>
